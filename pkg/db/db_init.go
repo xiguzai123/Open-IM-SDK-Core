@@ -2,6 +2,8 @@ package db
 
 import (
 	"errors"
+	"os"
+
 	//"github.com/glebarez/sqlite"
 	"gorm.io/driver/sqlite"
 
@@ -124,6 +126,7 @@ func (d *DataBase) initDB() error {
 	defer d.mRWMutex.Unlock()
 
 	//cxn := "memdb1?mode=memory&cache=shared"
+	os.MkdirAll(d.dbDir, os.ModeDir)
 	dbFileName := d.dbDir + "/OpenIM_" + constant.BigVersion + "_" + d.loginUserID + ".db"
 
 	db, err := gorm.Open(sqlite.Open(dbFileName), &gorm.Config{Logger: logger.Default.LogMode(logger.Silent)})
