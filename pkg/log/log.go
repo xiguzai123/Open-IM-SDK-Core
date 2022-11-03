@@ -7,6 +7,7 @@ import (
 	rotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"github.com/rifflock/lfshook"
 	"github.com/sirupsen/logrus"
+	"io"
 	"os"
 	"time"
 )
@@ -42,7 +43,7 @@ func loggerInit(moduleName string, logLevel uint32) *Logger {
 			panic(err.Error())
 		}
 		writer := bufio.NewWriter(src)
-		logger.SetOutput(writer)
+		logger.SetOutput(io.MultiWriter(os.Stdout, writer))
 	}
 
 	//Log Console Print Style Setting
@@ -92,7 +93,7 @@ func initRotateLogs(rotationTime time.Duration, maxRemainNum uint, level string,
 	}
 }
 
-//internal method
+// internal method
 func argsHandle(OperationID string, fields logrus.Fields, args []interface{}) {
 	for i := 0; i < len(args); i += 2 {
 		if i+1 < len(args) {
